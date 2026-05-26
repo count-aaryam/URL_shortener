@@ -33,9 +33,11 @@ app.add_middleware(
 )
 
 # Routers
-app.include_router(url_router.router, tags=["URL Shortener"])
+
 
 
 @app.get("/health", tags=["Health"])
 async def health_check():
     return {"status": "ok", "env": settings.APP_ENV}
+
+app.include_router(url_router.router, tags=["URL Shortener"], prefix="")
