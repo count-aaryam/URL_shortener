@@ -1,0 +1,39 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Environment variables (NEVER commit this)
+.env
+.env.*
+
+# Alembic (keep versions, ignore cache)
+alembic/__pycache__/
+
+# Database
+*.db
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker (Phase 7)
+*.log
+
+# Testing (future)
+.pytest_cache/
+htmlcov/
+.coverage
