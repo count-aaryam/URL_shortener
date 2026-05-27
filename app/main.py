@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import url as url_router
+from app.api.routes import auth as auth_router
 from app.config import settings
 from app.core.redis import close_redis, get_redis_client
 from app.database import Base, engine
@@ -11,7 +12,6 @@ from app.database import Base, engine
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
@@ -23,7 +23,6 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    # Shutdown
     await close_redis()
     await engine.dispose()
 
@@ -44,7 +43,6 @@ app.add_middleware(
 )
 
 
-
 @app.get("/health", tags=["Health"])
 async def health_check():
     redis = get_redis_client()
@@ -55,4 +53,6 @@ async def health_check():
         "redis": "connected" if redis_ok else "disconnected",
     }
 
-app.include_router(url_router.router, tags=["URL Shortener"],prefix="/api")
+
+app.include_router(auth_router.router, tags=["Auth"], prefix="/api")
+app.include_router(url_router.router, tags=["URL Shortener"], prefix="/api")
