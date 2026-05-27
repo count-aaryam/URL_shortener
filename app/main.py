@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.api.routes import ai as ai_router
 from app.api.routes import url as url_router
 from app.api.routes import auth as auth_router
 from app.api.routes import analytics as analytics_router
@@ -65,4 +65,5 @@ async def health_check():
 
 app.include_router(auth_router.router, tags=["Auth"], prefix="/api")
 app.include_router(analytics_router.router, tags=["Analytics"], prefix="/api")
+app.include_router(ai_router.router, tags=["AI"], prefix="/api")        # ← add
 app.include_router(url_router.router, tags=["URL Shortener"], prefix="/api")
