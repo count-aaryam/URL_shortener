@@ -115,12 +115,30 @@ async def deactivate_url(
 async def redirect_to_url(
     short_code: str,
     request: Request,
-    service: ShortenerService = Depends(get_service),
+    db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(get_redis_client),
 ):
+    service = ShortenerService(db=db, cache=CacheService(redis=redis))
     url_obj = await service.resolve_short_code(short_code)
+
     if url_obj is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Short URL not found or has expired",
         )
+
+    # Log click analytics asynchronously
+    analytics = AnalyticsService(db=db)
+    ip = request.headers.get("X-Forwarded-For", request.client.host if request.client else None)
+    user_agent = request.headers.get("User-Agent")
+    referrer = request.headers.get("Referer")
+
+    await analytics.log_click(
+        url_id=url_obj.id,
+        short_code=short_code,
+        ip_address=ip,
+        user_agent_str=user_agent,
+        referrer=referrer,
+    )
+
     return RedirectResponse(url=url_obj.original_url, status_code=status.HTTP_302_FOUND)
