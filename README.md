@@ -824,16 +824,12 @@ git push origin feat/your-feature-name
 
 ---
 
-## License
-
-MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
 ## Author
 
-**Your Name**
-[GitHub](https://github.com/yourusername) · [LinkedIn](https://linkedin.com/in/yourusername) · [Email](mailto:your@email.com)
+Aaryam Singh
 
 ---
 
